@@ -101,11 +101,18 @@ export const validateSecond = (formData, setErrors, step, setStep) => {
 
 export const validateThird = (formData, setErrors, step, setStep) => {
     const errorMessage = {}
+    const currentDateInMs = Date.now()
+    const birthInMs = new Date(formData.date).getTime()
+    const oneYearInMs = 1000 * 60 * 60 * 24 * 365.25
 
     if(!formData.date){
         errorMessage.date = 'date must be picked'
         setErrors((prev => ({...prev, date:true})))
-    } else{
+    } else if((currentDateInMs - birthInMs)/ oneYearInMs < 18){
+      setErrors((prev) => ({...prev, date:true}))
+      window.alert('Must be above 18 to continue!')
+    }
+    else{
         setErrors((prev) => ({...prev, date:false}))
     }
 
@@ -118,8 +125,10 @@ export const validateThird = (formData, setErrors, step, setStep) => {
 
     if(Object.keys(errorMessage).length === 0){
       setStep(step + 1)
+      console.log(formData.date)
     }
     else{
       console.log('ERROR')
+      console.log()
     }
 }

@@ -7,7 +7,7 @@ import Step1 from "./_features/step1";
 import Step2 from "./_features/step2";
 import Step3 from "./_features/step3";
 
-import { validateFirst, validateSecond, validateThird } from "./_components/validation";
+import { validateFirst, validateSecond, validateThird } from "./_utils/validation";
 
 export default function Home() {
   const [step, setStep] = useState(1);
@@ -38,17 +38,24 @@ export default function Home() {
 
     useEffect(() => {
       const saved = localStorage.getItem('formData');
+      const savedStep = localStorage.getItem('step')
       if(saved){
         setFormData(JSON.parse(saved))
         // setFormData((prev) => ({...prev, password:''}))
         // setFormData((prev) => ({...prev, confirmPassword:''}))
         setFormData((prev) => ({...prev, file:null}))
+        
+      }
+      if(savedStep){
+        const currentStep = JSON.parse(savedStep)
+        currentStep === 4 ? setStep(1): setStep(currentStep)
       }
     }, []);
 
     useEffect(() => {
       localStorage.setItem('formData', JSON.stringify(formData))
-    }, [formData])
+      localStorage.setItem('step', JSON.stringify(step))
+    }, [formData, step])
 
 
   const stepForward = () => {
